@@ -19,7 +19,7 @@ test_data = datasets.FashionMNIST(
   transform=transforms.ToTensor()
 )
 
-batch_size = 64
+batch_size = 8
 train_dataloader = DataLoader(training_data, batch_size=batch_size)
 test_dataloader = DataLoader(test_data, batch_size=batch_size)
 
@@ -84,7 +84,7 @@ def test(dataloader, model, loss_func):
   test_loss /= num_batches
   print(f"Test Error:\n Acc: {(100*correct):>0.1f}%, Avg loss: {test_loss:.8f}\n")
 
-epochs = 50
+epochs = 100
 for t in range(epochs):
   print(f"Epoch {t+1}\n----------------")
   train(train_dataloader, model, loss_func, optimizer)
@@ -94,26 +94,3 @@ print("Done!")
 model_name = "first_model_0709.pt"
 torch.save(model.state_dict(), model_name)
 print(f"Saved model: {model_name}")
-
-model_loaded = MyNN().to(device)
-model_loaded.load_state_dict(torch.load(model_name))
-model_loaded.eval()
-classes = [
-  "T-shirt/top",
-  "Trouser",
-  "Pullover",
-  "Dress",
-  "Coat",
-  "Sandal",
-  "Shirt",
-  "Sneaker",
-  "Bag",
-  "Ankle boot"
-]
-
-x, y = test_data[0][0], test_data[0][1]
-with torch.no_grad():
-  pred = model(x)
-  predicted, actual = classes[pred[0].argmax(0)], classes[y]
-  print(f'Predicted: "{predicted}", Actual: "{actual}"')
-
